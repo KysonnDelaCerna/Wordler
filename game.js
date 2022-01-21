@@ -115,6 +115,12 @@ $(document).ready(async function () {
         if (word.length < 5) {
             $('.attempts>h5').hide();
         }
+
+        if (score > 0) {
+            $('#title').text(`Score: ${score}`);
+            $('#title').attr('class', 'text-2xl font-extrabold my-auto');
+        }
+
     } else {
         reset();
     }
