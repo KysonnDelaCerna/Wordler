@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wordler - Wordle at your pace</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="game.js"></script>
+</head>
+<body>
+    <div class="h-screen w-screen">
+        <div class="flex flex-col h-screen w-full md:w-1/2 lg:w-1/3 mx-auto">
+            <div id="menu" class="flex flex-row w-5/6 justify-between content-center border-b-4 mx-auto" style="height: 10%;">
+                <button id="showhelp" class="text-sm font-semibold my-auto bg-gray-300 text-white h-8 w-8 text-center rounded-full">❓</button>
+                <h1 id="title" class="text-5xl font-extrabold my-auto">Wordler</h1>
+                <button id="showscore" class="text-sm font-semibold my-auto bg-gray-300 text-white h-8 w-8 text-center rounded-full">🏆</button>
+            </div>
+    
+            <div id="guess" class="relative flex flex-col w-full justify-evenly content-center overflow-y-auto" style="height: 60%;">
+                <h1 id="error" class="absolute hidden p-4 top-4 w-1/2 left-1/4 bg-black rounded-lg text-white font-semibold text-lg text-center"></h1>
+                
+                <div id="attempt1" class="attempts flex flex-row w-full h-1/6 my-1 justify-center">
+                    <h1 class="h-12 w-12 my-auto mx-1 border border-gray-900 text-center text-3xl font-bold" style="line-height: 2.75rem;"></h1>
+                    <h2 class="h-12 w-12 my-auto mx-1 border border-gray-900 text-center text-3xl font-bold" style="line-height: 2.75rem;"></h2>
+                    <h3 class="h-12 w-12 my-auto mx-1 border border-gray-900 text-center text-3xl font-bold" style="line-height: 2.75rem;"></h3>
+                    <h4 class="h-12 w-12 my-auto mx-1 border border-gray-900 text-center text-3xl font-bold" style="line-height: 2.75rem;"></h4>
+                    <h5 class="h-12 w-12 my-auto mx-1 border border-gray-900 text-center text-3xl font-bold" style="line-height: 2.75rem;"></h5>
+                    <h6 class="h-12 w-12 my-auto mx-1 border border-gray-900 text-center text-3xl font-bold" style="line-height: 2.75rem;"></h6>
+                </div>
+
+                <div id="attempt2" class="attempts flex flex-row w-full h-1/6 my-1 justify-center">
+                    <h1 class="h-12 w-12 my-auto mx-1 border border-gray-900 text-center text-3xl font-bold" style="line-height: 2.75rem;"></h1>
+                    <h2 class="h-12 w-12 my-auto mx-1 border border-gray-900 text-center text-3xl font-bold" style="line-height: 2.75rem;"></h2>
+                    <h3 class="h-12 w-12 my-auto mx-1 border border-gray-900 text-center text-3xl font-bold" style="line-height: 2.75rem;"></h3>
+                    <h4 class="h-12 w-12 my-auto mx-1 border border-gray-900 text-center text-3xl font-bold" style="line-height: 2.75rem;"></h4>
+                    <h5 class="h-12 w-12 my-auto mx-1 border border-gray-900 text-center text-3xl font-bold" style="line-height: 2.75rem;"></h5>
+                    <h6 class="h-12 w-12 my-auto mx-1 border border-gray-900 text-center text-3xl font-bold" style="line-height: 2.75rem;"></h6>
+                </div>
+
+                <div id="attempt3" class="attempts flex flex-row w-full h-1/6 my-1 justify-center">
+                    <h1 class="h-12 w-12 my-auto mx-1 border border-gray-900 text-center text-3xl font-bold" style="line-height: 2.75rem;"></h1>
+                    <h2 class="h-12 w-12 my-auto mx-1 border border-gray-900 text-center text-3xl font-bold" style="line-height: 2.75rem;"></h2>
+                    <h3 class="h-12 w-12 my-auto mx-1 border border-gray-900 text-center text-3xl font-bold" style="line-height: 2.75rem;"></h3>
+                    <h4 class="h-12 w-12 my-auto mx-1 border border-gray-900 text-center text-3xl font-bold" style="line-height: 2.75rem;"></h4>
+                    <h5 class="h-12 w-12 my-auto mx-1 border border-gray-900 text-center text-3xl font-bold" style="line-height: 2.75rem;"></h5>
+                    <h6 class="h-12 w-12 my-auto mx-1 border border-gray-900 text-center text-3xl font-bold" style="line-height: 2.75rem;"></h6>
+                </div>
+
+                <div id="attempt4" class="attempts flex flex-row w-full h-1/6 my-1 justify-center">
+                    <h1 class="h-12 w-12 my-auto mx-1 border border-gray-900 text-center text-3xl font-bold" style="line-height: 2.75rem;"></h1>
+                    <h2 class="h-12 w-12 my-auto mx-1 border border-gray-900 text-center text-3xl font-bold" style="line-height: 2.75rem;"></h2>
+                    <h3 class="h-12 w-12 my-auto mx-1 border border-gray-900 text-center text-3xl font-bold" style="line-height: 2.75rem;"></h3>
+                    <h4 class="h-12 w-12 my-auto mx-1 border border-gray-900 text-center text-3xl font-bold" style="line-height: 2.75rem;"></h4>
+                    <h5 class="h-12 w-12 my-auto mx-1 border border-gray-900 text-center text-3xl font-bold" style="line-height: 2.75rem;"></h5>
+                    <h6 class="h-12 w-12 my-auto mx-1 border border-gray-900 text-center text-3xl font-bold" style="line-height: 2.75rem;"></h6>
+                </div>
+
+                <div id="attempt5" class="attempts flex flex-row w-full h-1/6 my-1 justify-center">
+                    <h1 class="h-12 w-12 my-auto mx-1 border border-gray-900 text-center text-3xl font-bold" style="line-height: 2.75rem;"></h1>
+                    <h2 class="h-12 w-12 my-auto mx-1 border border-gray-900 text-center text-3xl font-bold" style="line-height: 2.75rem;"></h2>
+                    <h3 class="h-12 w-12 my-auto mx-1 border border-gray-900 text-center text-3xl font-bold" style="line-height: 2.75rem;"></h3>
+                    <h4 class="h-12 w-12 my-auto mx-1 border border-gray-900 text-center text-3xl font-bold" style="line-height: 2.75rem;"></h4>
+                    <h5 class="h-12 w-12 my-auto mx-1 border border-gray-900 text-center text-3xl font-bold" style="line-height: 2.75rem;"></h5>
+                    <h6 class="h-12 w-12 my-auto mx-1 border border-gray-900 text-center text-3xl font-bold" style="line-height: 2.75rem;"></h6>
+                </div>
+
+                <div id="attempt6" class="attempts flex flex-row w-full h-1/6 my-1 justify-center">
+                    <h1 class="h-12 w-12 my-auto mx-1 border border-gray-900 text-center text-3xl font-bold" style="line-height: 2.75rem;"></h1>
+                    <h2 class="h-12 w-12 my-auto mx-1 border border-gray-900 text-center text-3xl font-bold" style="line-height: 2.75rem;"></h2>
+                    <h3 class="h-12 w-12 my-auto mx-1 border border-gray-900 text-center text-3xl font-bold" style="line-height: 2.75rem;"></h3>
+                    <h4 class="h-12 w-12 my-auto mx-1 border border-gray-900 text-center text-3xl font-bold" style="line-height: 2.75rem;"></h4>
+                    <h5 class="h-12 w-12 my-auto mx-1 border border-gray-900 text-center text-3xl font-bold" style="line-height: 2.75rem;"></h5>
+                    <h6 class="h-12 w-12 my-auto mx-1 border border-gray-900 text-center text-3xl font-bold" style="line-height: 2.75rem;"></h6>
+                </div>
+            </div>
+    
+            <div id="keyboard" class="flex flex-col h-3/10 w-full justify-evenly content-center" style="height: 30%;">
+                <div id="qwertyuiop" class="flex flex-row content-center mx-auto h-1/3 my-1">
+                    <button id="Q" class="key bg-gray-300 rounded-lg w-8 mx-0.5 text-lg font-semibold">Q</button>
+                    <button id="W" class="key bg-gray-300 rounded-lg w-8 mx-0.5 text-lg font-semibold">W</button>
+                    <button id="E" class="key bg-gray-300 rounded-lg w-8 mx-0.5 text-lg font-semibold">E</button>
+                    <button id="R" class="key bg-gray-300 rounded-lg w-8 mx-0.5 text-lg font-semibold">R</button>
+                    <button id="T" class="key bg-gray-300 rounded-lg w-8 mx-0.5 text-lg font-semibold">T</button>
+                    <button id="Y" class="key bg-gray-300 rounded-lg w-8 mx-0.5 text-lg font-semibold">Y</button>
+                    <button id="U" class="key bg-gray-300 rounded-lg w-8 mx-0.5 text-lg font-semibold">U</button>
+                    <button id="I" class="key bg-gray-300 rounded-lg w-8 mx-0.5 text-lg font-semibold">I</button>
+                    <button id="O" class="key bg-gray-300 rounded-lg w-8 mx-0.5 text-lg font-semibold">O</button>
+                    <button id="P" class="key bg-gray-300 rounded-lg w-8 mx-0.5 text-lg font-semibold">P</button>
+                </div>
+
+                <div id="asdfghjkl" class="flex flex-row content-center mx-auto h-1/3 my-1">
+                    <button id="A" class="key bg-gray-300 rounded-lg w-8 mx-0.5 text-lg font-semibold">A</button>
+                    <button id="S" class="key bg-gray-300 rounded-lg w-8 mx-0.5 text-lg font-semibold">S</button>
+                    <button id="D" class="key bg-gray-300 rounded-lg w-8 mx-0.5 text-lg font-semibold">D</button>
+                    <button id="F" class="key bg-gray-300 rounded-lg w-8 mx-0.5 text-lg font-semibold">F</button>
+                    <button id="G" class="key bg-gray-300 rounded-lg w-8 mx-0.5 text-lg font-semibold">G</button>
+                    <button id="H" class="key bg-gray-300 rounded-lg w-8 mx-0.5 text-lg font-semibold">H</button>
+                    <button id="J" class="key bg-gray-300 rounded-lg w-8 mx-0.5 text-lg font-semibold">J</button>
+                    <button id="K" class="key bg-gray-300 rounded-lg w-8 mx-0.5 text-lg font-semibold">K</button>
+                    <button id="L" class="key bg-gray-300 rounded-lg w-8 mx-0.5 text-lg font-semibold">L</button>
+                </div>
+
+                <div id="zxcvbnm" class="flex flex-row content-center mx-auto h-1/3 my-1">
+                    <button id="Enter" class="bg-gray-300 rounded-lg w-12 mx-0.5 text-xl font-semibold">↵</button>
+                    <button id="Z" class="key bg-gray-300 rounded-lg w-8 mx-0.5 text-lg font-semibold">Z</button>
+                    <button id="X" class="key bg-gray-300 rounded-lg w-8 mx-0.5 text-lg font-semibold">X</button>
+                    <button id="C" class="key bg-gray-300 rounded-lg w-8 mx-0.5 text-lg font-semibold">C</button>
+                    <button id="V" class="key bg-gray-300 rounded-lg w-8 mx-0.5 text-lg font-semibold">V</button>
+                    <button id="B" class="key bg-gray-300 rounded-lg w-8 mx-0.5 text-lg font-semibold">B</button>
+                    <button id="N" class="key bg-gray-300 rounded-lg w-8 mx-0.5 text-lg font-semibold">N</button>
+                    <button id="M" class="key bg-gray-300 rounded-lg w-8 mx-0.5 text-lg font-semibold">M</button>
+                    <button id="Back" class="bg-gray-300 rounded-lg w-12 mx-0.5 text-xl font-semibold">⌫</button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="helpmodal" class="hidden absolute top-0 left-0 h-screen w-screen" style="background-color: rgba(100, 100, 100, 0.5);">
+            <div class="flex flex-col h-screen w-full md:w-1/2 lg:w-1/3 mx-auto bg-white md:rounded-lg">
+                <div class="flex flex-row mx-auto w-full justify-between" style="height: 10%;">
+                    <button class="text-lg font-semibold my-auto ml-4 bg-white text-white h-8 w-8 text-center rounded-full cursor-default"></button>
+                    <h2 class="font-bold text-3xl my-auto">How to Play</h2>
+                    <button id="closehelp" class="text-sm font-semibold my-auto mr-4 bg-gray-300 text-white h-8 w-8 text-center rounded-full">❌</button>
+                </div>
+
+                <div class="relative mx-4 border-b-2" style="height: 20%;">
+                    <p class="absolute bottom-0 text-sm mb-4">Guess the <span class="font-bold">WORDLE</span> in 6 tries.</br>
+                    Each guess must be a valid word. Hit the enter button to submit.</br>
+                    After each guess, the color of the tiles will change to show how close your guess was to the word.</p>
+                </div>
+
+                <div class="flex flex-col m-4 justify-start" style="height: 70%;">
+                    <h2 class="font-semibold">Examples</h2>
+
+                    <div class="flex flex-row w-full h-1/6 my-1 justify-start">
+                        <p class="h-12 w-12 my-auto mx-1 bg-green-700 text-white text-center text-3xl font-bold" style="line-height: 2.75rem;">H</p>
+                        <p class="h-12 w-12 my-auto mx-1 border border-gray-900 text-center text-3xl font-bold" style="line-height: 2.75rem;">E</p>
+                        <p class="h-12 w-12 my-auto mx-1 border border-gray-900 text-center text-3xl font-bold" style="line-height: 2.75rem;">L</p>
+                        <p class="h-12 w-12 my-auto mx-1 border border-gray-900 text-center text-3xl font-bold" style="line-height: 2.75rem;">L</p>
+                    </div>
+
+                    <p>The letter <span class="font-bold">H</span> is in the word and in the correct spot.</p>
+
+                    <div class="flex flex-row w-full h-1/6 my-1 justify-start">
+                        <p class="h-12 w-12 my-auto mx-1 border border-gray-900 text-center text-3xl font-bold" style="line-height: 2.75rem;">H</p>
+                        <p class="h-12 w-12 my-auto mx-1 bg-yellow-600 text-white text-center text-3xl font-bold" style="line-height: 2.75rem;">E</p>
+                        <p class="h-12 w-12 my-auto mx-1 border border-gray-900 text-center text-3xl font-bold" style="line-height: 2.75rem;">L</p>
+                        <p class="h-12 w-12 my-auto mx-1 border border-gray-900 text-center text-3xl font-bold" style="line-height: 2.75rem;">L</p>
+                        <p class="h-12 w-12 my-auto mx-1 border border-gray-900 text-center text-3xl font-bold" style="line-height: 2.75rem;">O</p>
+                    </div>
+
+                    <p>The letter <span class="font-bold">E</span> is in the word but in the wrong spot.</p>
+                    <div class="flex flex-row w-full h-1/6 my-1 justify-start">
+                        <p class="h-12 w-12 my-auto mx-1 border border-gray-900 text-center text-3xl font-bold" style="line-height: 2.75rem;">H</p>
+                        <p class="h-12 w-12 my-auto mx-1 border border-gray-900 text-center text-3xl font-bold" style="line-height: 2.75rem;">E</p>
+                        <p class="h-12 w-12 my-auto mx-1 bg-gray-600 text-white text-center text-3xl font-bold" style="line-height: 2.75rem;">L</p>
+                        <p class="h-12 w-12 my-auto mx-1 bg-gray-600 text-white text-center text-3xl font-bold" style="line-height: 2.75rem;">L</p>
+                        <p class="h-12 w-12 my-auto mx-1 border border-gray-900 text-center text-3xl font-bold" style="line-height: 2.75rem;">O</p>
+                        <p class="h-12 w-12 my-auto mx-1 border border-gray-900 text-center text-3xl font-bold" style="line-height: 2.75rem;">S</p>
+                    </div>
+
+                    <p>The letter <span class="font-bold">L</span> is not in the word in any spot.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="scoremodal" class="hidden absolute top-0 left-0 h-screen w-screen" style="background-color: rgba(100, 100, 100, 0.5);">
+            <div class="absolute h-1/2 w-full md:w-1/2 lg:w-1/3 md:left-1/4 lg:left-1/3 top-1/4 bg-white rounded-xl">
+                <div class="flex flex-row mx-auto w-11/12 justify-between border-b-2" style="height: 20%;">
+                    <button class="text-lg font-semibold my-auto ml-4 bg-white text-white h-8 w-8 text-center rounded-full cursor-default"></button>
+                    <h2 class="font-bold text-3xl my-auto">Statistics</h2>
+                    <button id="closescore" class="text-sm font-semibold my-auto mr-4 bg-gray-300 text-white h-8 w-8 text-center rounded-full">❌</button>
+                </div>
+
+                <div class="flex flex-col px-8 pt-4 mx-auto" style="height: 80%;">
+                    <h1 class="text-2xl font-bold">Highscore: </h1>
+                    <h1 id="highscore" class="text-2xl font-bold pb-2">0</h1>
+                    <h1 class="text-2xl font-bold">Games played: </h1>
+                    <h1 id="gamesplayed" class="text-2xl font-bold pb-2">0</h1>
+                    <h1 class="text-2xl font-bold">Words guessed: </h1>
+                    <h1 id="wordsguessed" class="text-2xl font-bold pb-2">0</h1>
+                </div>
+            </div>
+        </div>
+
+        <div id="gameovermodal" class="hidden absolute top-0 left-0 h-screen w-screen" style="background-color: rgba(100, 100, 100, 0.5);">
+            <div class="absolute h-1/2 w-full md:w-1/2 lg:w-1/3 md:left-1/4 lg:left-1/3 top-1/4 bg-white rounded-xl">
+                <div class="flex flex-row mx-auto w-11/12 justify-between border-b-2" style="height: 20%;">
+                    <button class="text-lg font-semibold my-auto ml-4 bg-white text-white h-8 w-8 text-center rounded-full cursor-default"></button>
+                    <h2 class="font-bold text-3xl my-auto">Game Over</h2>
+                    <button id="closegameover" class="text-sm font-semibold my-auto mr-4 bg-gray-300 text-white h-8 w-8 text-center rounded-full">❌</button>
+                </div>
+
+                <div class="flex flex-col px-8 pt-4 mx-auto" style="height: 80%;">
+                    <h1 class="text-2xl font-bold">The word was: </h1>
+                    <h1 id="word" class="text-2xl font-bold pb-2">Wordler</h1>
+                    <h1 class="text-2xl font-bold">Score: </h1>
+                    <h1 id="score" class="text-2xl font-bold pb-2">0</h1>
+                    <h1 class="text-2xl font-bold">Highscore: </h1>
+                    <h1 id="bigscore" class="text-2xl font-bold pb-2">0</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
