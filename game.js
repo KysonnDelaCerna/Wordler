@@ -94,17 +94,38 @@ $(document).ready(async function () {
     
                 $(selector).text(char);
     
-                if (char === word.charAt(j - 1)) {
-                    $(selector).attr('class', 'h-12 w-12 my-auto mx-1 bg-green-700 text-white text-center text-3xl font-bold');
-                    $(`#${char}`).attr('class', 'key bg-green-700 rounded-lg w-8 mx-0.5 text-lg font-semibold');
-                } else if (word.indexOf(char) != -1) {
-                    $(selector).attr('class', 'h-12 w-12 my-auto mx-1 bg-yellow-600 text-white text-center text-3xl font-bold');
-                    if (!$(`#${char}`).hasClass('bg-green-700')) {
-                        $(`#${char}`).attr('class', 'key bg-yellow-600 rounded-lg w-8 mx-0.5 text-lg font-semibold');
-                    }
-                } else {
+                if (word.indexOf(char) === -1) {
                     $(selector).attr('class', 'h-12 w-12 my-auto mx-1 bg-gray-600 text-white text-center text-3xl font-bold');
                     $(`#${char}`).attr('class', 'key bg-gray-600 rounded-lg w-8 mx-0.5 text-lg font-semibold');
+                } else if (char === word.charAt(j - 1)) {
+                    $(selector).attr('class', 'h-12 w-12 my-auto mx-1 bg-green-700 text-white text-center text-3xl font-bold');
+                    $(`#${char}`).attr('class', 'key bg-green-700 rounded-lg w-8 mx-0.5 text-lg font-semibold');
+                } else {
+                    const occurance = word.split('').filter(c => c === char).length;
+                    let charcount = 1;
+                    let budget = occurance;
+
+                    for (k = 0; k < attempthistory[i - 1].length; k++) {
+                        if (k <= j - 2 && attempthistory[i - 1].charAt(k) === char) {
+                            charcount += 1;
+                        }
+
+                        if (attempthistory[i - 1].charAt(k) === word.charAt(k)) {
+                            budget -= 1;
+                        }
+                    }
+
+                    if (charcount <= budget) {
+                        $(selector).attr('class', 'h-12 w-12 my-auto mx-1 bg-yellow-600 text-white text-center text-3xl font-bold');
+                        if (!$(`#${char}`).hasClass('bg-green-700')) {
+                            $(`#${char}`).attr('class', 'key bg-yellow-600 rounded-lg w-8 mx-0.5 text-lg font-semibold');
+                        }
+                    } else {
+                        $(selector).attr('class', 'h-12 w-12 my-auto mx-1 bg-gray-600 text-white text-center text-3xl font-bold');
+                        if (!$(`#${char}`).hasClass('bg-green-700') && !$(`#${char}`).hasClass('bg-yellow-600')) {
+                            $(`#${char}`).attr('class', 'key bg-gray-600 rounded-lg w-8 mx-0.5 text-lg font-semibold');
+                        }
+                    }
                 }
             }
         }
@@ -267,17 +288,38 @@ $(document).ready(async function () {
 
             $(selector).text(char);
 
-            if (char === word.charAt(i - 1)) {
-                $(selector).attr('class', 'h-12 w-12 my-auto mx-1 bg-green-700 text-white text-center text-3xl font-bold');
-                $(`#${char}`).attr('class', 'key bg-green-700 rounded-lg w-8 mx-0.5 text-lg font-semibold');
-            } else if (word.indexOf(char) != -1) {
-                $(selector).attr('class', 'h-12 w-12 my-auto mx-1 bg-yellow-600 text-white text-center text-3xl font-bold');
-                if (!$(`#${char}`).hasClass('bg-green-700')) {
-                    $(`#${char}`).attr('class', 'key bg-yellow-600 rounded-lg w-8 mx-0.5 text-lg font-semibold');
-                }
-            } else {
+            if (word.indexOf(char) === -1) {
                 $(selector).attr('class', 'h-12 w-12 my-auto mx-1 bg-gray-600 text-white text-center text-3xl font-bold');
                 $(`#${char}`).attr('class', 'key bg-gray-600 rounded-lg w-8 mx-0.5 text-lg font-semibold');
+            } else if (char === word.charAt(i - 1)) {
+                $(selector).attr('class', 'h-12 w-12 my-auto mx-1 bg-green-700 text-white text-center text-3xl font-bold');
+                $(`#${char}`).attr('class', 'key bg-green-700 rounded-lg w-8 mx-0.5 text-lg font-semibold');
+            } else {
+                const occurance = word.split('').filter(c => c === char).length;
+                let charcount = 1;
+                let budget = occurance;
+
+                for (k = 0; k < guess.length; k++) {
+                    if (k <= i - 2 && guess.charAt(k) === char) {
+                        charcount += 1;
+                    }
+
+                    if (guess.charAt(k) === word.charAt(k)) {
+                        budget -= 1;
+                    }
+                }
+
+                if (charcount <= budget) {
+                    $(selector).attr('class', 'h-12 w-12 my-auto mx-1 bg-yellow-600 text-white text-center text-3xl font-bold');
+                    if (!$(`#${char}`).hasClass('bg-green-700')) {
+                        $(`#${char}`).attr('class', 'key bg-yellow-600 rounded-lg w-8 mx-0.5 text-lg font-semibold');
+                    }
+                } else {
+                    $(selector).attr('class', 'h-12 w-12 my-auto mx-1 bg-gray-600 text-white text-center text-3xl font-bold');
+                    if (!$(`#${char}`).hasClass('bg-green-700') && !$(`#${char}`).hasClass('bg-yellow-600')) {
+                        $(`#${char}`).attr('class', 'key bg-gray-600 rounded-lg w-8 mx-0.5 text-lg font-semibold');
+                    }
+                }
             }
         }
 
