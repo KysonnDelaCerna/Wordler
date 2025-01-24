@@ -85,49 +85,14 @@ $(document).ready(async function () {
     let gamesplayed = 0;
     let wordsguessed = 0;
 
+    const CORRECT_COLOR = "bg-green-700";
+    const PARTIAL_COLOR = "bg-yellow-600";
+    const WRONG_COLOR = "bg-gray-600";
+
     if (await load()) {
         guess = '';
-        for (let i = 1; i <= attempthistory.length; i++) {
-            for (let j = 1; j <= attempthistory[i - 1].length; j++) {
-                let selector = `#attempt${i}>h${j}`;
-                let char = attempthistory[i - 1].charAt(j - 1);
-    
-                $(selector).text(char);
-    
-                if (word.indexOf(char) === -1) {
-                    $(selector).attr('class', 'h-12 w-12 my-auto mx-1 bg-gray-600 text-white text-center text-3xl font-bold');
-                    $(`#${char}`).attr('class', 'key bg-gray-600 rounded-lg w-8 mx-0.5 text-lg font-semibold');
-                } else if (char === word.charAt(j - 1)) {
-                    $(selector).attr('class', 'h-12 w-12 my-auto mx-1 bg-green-700 text-white text-center text-3xl font-bold');
-                    $(`#${char}`).attr('class', 'key bg-green-700 rounded-lg w-8 mx-0.5 text-lg font-semibold');
-                } else {
-                    const occurance = word.split('').filter(c => c === char).length;
-                    let charcount = 1;
-                    let budget = occurance;
-
-                    for (k = 0; k < attempthistory[i - 1].length; k++) {
-                        if (k <= j - 2 && attempthistory[i - 1].charAt(k) === char) {
-                            charcount += 1;
-                        }
-
-                        if (attempthistory[i - 1].charAt(k) === word.charAt(k)) {
-                            budget -= 1;
-                        }
-                    }
-
-                    if (charcount <= budget) {
-                        $(selector).attr('class', 'h-12 w-12 my-auto mx-1 bg-yellow-600 text-white text-center text-3xl font-bold');
-                        if (!$(`#${char}`).hasClass('bg-green-700')) {
-                            $(`#${char}`).attr('class', 'key bg-yellow-600 rounded-lg w-8 mx-0.5 text-lg font-semibold');
-                        }
-                    } else {
-                        $(selector).attr('class', 'h-12 w-12 my-auto mx-1 bg-gray-600 text-white text-center text-3xl font-bold');
-                        if (!$(`#${char}`).hasClass('bg-green-700') && !$(`#${char}`).hasClass('bg-yellow-600')) {
-                            $(`#${char}`).attr('class', 'key bg-gray-600 rounded-lg w-8 mx-0.5 text-lg font-semibold');
-                        }
-                    }
-                }
-            }
+        for (let i = 0; i < attempthistory.length; i++) {
+            await checkAttempt(i);
         }
 
         if (word.length < 6) {
@@ -238,89 +203,121 @@ $(document).ready(async function () {
         return false;
     }
 
+    async function displayError(text) {
+        $('#error').text(text);
+        $('#error').fadeIn(150);
+        $('#error').fadeOut(500);
+    }
+
+    async function getColorFromStatus(status) {
+        switch (status) {
+            case "correct": 
+                return CORRECT_COLOR;
+            case "partial":
+                return PARTIAL_COLOR;
+            case "wrong":
+                return WRONG_COLOR;
+            case "none":
+            default:
+                return "";
+        }
+    }
+
+    async function setGuessColor(selector, status) {
+        const color = await getColorFromStatus(status);
+        $(selector).attr('class', `h-12 w-12 my-auto mx-1 text-white text-center text-3xl font-bold ${color}`);
+    }
+
+    async function setKeyColor(char, status) {
+        if ($(`#${char}`).hasClass(CORRECT_COLOR) || $(`#${char}`).hasClass(WRONG_COLOR)) {
+            return;
+        }
+
+        if ($(`#${char}`).hasClass(PARTIAL_COLOR) && status != "correct") {
+            return;
+        }
+
+        const color = await getColorFromStatus(status);
+
+        
+        $(`#${char}`).attr('class', `key rounded-lg w-8 mx-0.5 text-lg font-semibold ${color}`);
+    }
+
+    async function checkAttempt(number) {
+        if (number >= attempthistory.length) {
+            return;
+        }
+
+        const thisAttempt = attempthistory[number];
+
+        for (let i = 0; i < thisAttempt.length; i++) {
+            const selector = `#attempt${number + 1}>h${i + 1}`;
+            const char = thisAttempt.charAt(i);
+
+            $(selector).text(char);
+
+            if (word.indexOf(char) === -1) {
+                setGuessColor(selector, "wrong");
+                setKeyColor(char, "wrong");
+            } else if (char === word.charAt(i)) {
+                setGuessColor(selector, "correct");
+                setKeyColor(char, "correct");
+            } else {
+                let budget = word.split(char).length - 1;
+                const occurances = thisAttempt.slice(0, i + 1).split(char).length - 1;
+
+                for (let j = 0; j < word.length; j++) {
+                    if (thisAttempt.charAt(j) == word.charAt(j)) {
+                        budget -= 1;
+                    }
+                }
+
+                if (occurances <= budget) {
+                    setGuessColor(selector, "partial");
+                    setKeyColor(char, "partial");
+                } else {
+                    setGuessColor(selector, "wrong");
+                    setKeyColor(char, "wrong");
+                }
+            }
+        }
+    }
+
     async function enter () {
         if (isgameover) {
             return;
         }
 
         if (guess.length != word.length) {
-            $('#error').text('Length mismatch');
-            $('#error').fadeIn(150);
-            $('#error').fadeOut(500);
+            await displayError('Length mismatch');
             return;
         }
 
+        let dictionary = null;
+
         switch (word.length) {
             case 4: {
-                if (dictionary4.indexOf(guess.toLowerCase()) == -1) {
-                    $('#error').text('Not in dictionary');
-                    $('#error').fadeIn(150);
-                    $('#error').fadeOut(500);
-                    return;
-                }
+                dictionary = dictionary4;
                 break;
             }
             case 5: {
-                if (dictionary5.indexOf(guess.toLowerCase()) == -1) {
-                    $('#error').text('Not in dictionary');
-                    $('#error').fadeIn(150);
-                    $('#error').fadeOut(500);
-                    return;
-                }
+                dictionary = dictionary5;
                 break;
             }
             case 6: {
-                if (dictionary6.indexOf(guess.toLowerCase()) == -1) {
-                    $('#error').text('Not in dictionary');
-                    $('#error').fadeIn(150);
-                    $('#error').fadeOut(500);
-                    return;
-                }
+                dictionary = dictionary6;
                 break;
             }
         }
 
-        guess = guess.toUpperCase();
-
-        for (let i = 1; i <= guess.length; i++) {
-            let selector = `#attempt${attemptnumber}>h${i}`;
-            let char = guess.charAt(i - 1);
-
-            $(selector).text(char);
-
-            if (word.indexOf(char) === -1) {
-                $(selector).attr('class', 'h-12 w-12 my-auto mx-1 bg-gray-600 text-white text-center text-3xl font-bold');
-                $(`#${char}`).attr('class', 'key bg-gray-600 rounded-lg w-8 mx-0.5 text-lg font-semibold');
-            } else if (char === word.charAt(i - 1)) {
-                $(selector).attr('class', 'h-12 w-12 my-auto mx-1 bg-green-700 text-white text-center text-3xl font-bold');
-                $(`#${char}`).attr('class', 'key bg-green-700 rounded-lg w-8 mx-0.5 text-lg font-semibold');
-            } else {
-                let budget = word.split('').filter(c => c === char).length;
-                let occurances = guess.slice(0, i).split(char).length - 1;
-
-                for (let j = 1; j <= guess.length; j++) {
-                    if (i == j) {
-                        continue;
-                    }
-
-                    if (word.charAt(j - 1) == char) {
-                        budget -= 1;
-                    }
-                }
-
-                if (occurances <= budget) {
-                    $(selector).attr('class', 'h-12 w-12 my-auto mx-1 bg-yellow-600 text-white text-center text-3xl font-bold');
-                    if (!$(`#${char}`).hasClass('bg-green-700')) {
-                        $(`#${char}`).attr('class', 'key bg-yellow-600 rounded-lg w-8 mx-0.5 text-lg font-semibold');
-                    }
-                } else {
-                    $(selector).attr('class', 'h-12 w-12 my-auto mx-1 bg-gray-600 text-white text-center text-3xl font-bold');
-                    if (!$(`#${char}`).hasClass('bg-green-700') && !$(`#${char}`).hasClass('bg-yellow-600')) {
-                        $(`#${char}`).attr('class', 'key bg-gray-600 rounded-lg w-8 mx-0.5 text-lg font-semibold');
-                    }
-                }
-            }
+        if (dictionary != null && dictionary.indexOf(guess.toLowerCase()) == -1) {
+            // await displayError('Not in dictionary');
+            // return;
         }
+
+        attempthistory.push(guess);
+        await checkAttempt(attemptnumber - 1);
+        attemptnumber += 1;
 
         if (guess === word) {
             score += (7 - attemptnumber) + (word.length - 4);
@@ -331,9 +328,6 @@ $(document).ready(async function () {
             attemptnumber = 1;
             attempthistory = [];
             wordsguessed += 1;
-        } else {
-            attempthistory.push(guess);
-            attemptnumber += 1;
         }
 
         guess = '';
