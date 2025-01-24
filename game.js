@@ -295,8 +295,18 @@ $(document).ready(async function () {
                 $(selector).attr('class', 'h-12 w-12 my-auto mx-1 bg-green-700 text-white text-center text-3xl font-bold');
                 $(`#${char}`).attr('class', 'key bg-green-700 rounded-lg w-8 mx-0.5 text-lg font-semibold');
             } else {
-                const budget = word.split('').filter(c => c === char).length;
-                const occurances = guess.slice(0, i).split(char).length - 1;
+                let budget = word.split('').filter(c => c === char).length;
+                let occurances = guess.slice(0, i).split(char).length - 1;
+
+                for (let j = 1; j <= guess.length; j++) {
+                    if (i == j) {
+                        continue;
+                    }
+
+                    if (word.charAt(j - 1) == char) {
+                        budget -= 1;
+                    }
+                }
 
                 if (occurances <= budget) {
                     $(selector).attr('class', 'h-12 w-12 my-auto mx-1 bg-yellow-600 text-white text-center text-3xl font-bold');
