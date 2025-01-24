@@ -295,21 +295,10 @@ $(document).ready(async function () {
                 $(selector).attr('class', 'h-12 w-12 my-auto mx-1 bg-green-700 text-white text-center text-3xl font-bold');
                 $(`#${char}`).attr('class', 'key bg-green-700 rounded-lg w-8 mx-0.5 text-lg font-semibold');
             } else {
-                const occurance = word.split('').filter(c => c === char).length;
-                let charcount = 1;
-                let budget = occurance;
+                const budget = word.split('').filter(c => c === char).length;
+                const occurances = guess.slice(0, i).split(char).length - 1;
 
-                for (k = 0; k < guess.length; k++) {
-                    if (k <= i - 2 && guess.charAt(k) === char) {
-                        charcount += 1;
-                    }
-
-                    if (guess.charAt(k) === word.charAt(k)) {
-                        budget -= 1;
-                    }
-                }
-
-                if (charcount <= budget) {
+                if (occurances <= budget) {
                     $(selector).attr('class', 'h-12 w-12 my-auto mx-1 bg-yellow-600 text-white text-center text-3xl font-bold');
                     if (!$(`#${char}`).hasClass('bg-green-700')) {
                         $(`#${char}`).attr('class', 'key bg-yellow-600 rounded-lg w-8 mx-0.5 text-lg font-semibold');
